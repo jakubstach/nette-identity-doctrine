@@ -1,36 +1,30 @@
-<?php
+<?php declare(strict_types = 1);
 
-namespace Majkl578\NetteAddons\Doctrine2Identity\Http;
+namespace Darkling\Doctrine2Identity;
 
-use Doctrine\ORM\EntityManager;
-use Majkl578\NetteAddons\Doctrine2Identity\Security\FakeIdentity;
+use Darkling\Doctrine2Identity\Utils\DoctrineClassUtils;
+use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Nette\Http\Session;
 use Nette\Http\UserStorage as NetteUserStorage;
 use Nette\Security\IIdentity;
 
-/**
- * @author Michael Moravec
- */
 class UserStorage extends NetteUserStorage
 {
-	/** @var EntityManager */
+
+	/** @var EntityManagerDecorator */
 	private $entityManager;
 
-	public function  __construct(Session $sessionHandler, EntityManager $entityManager)
+	public function __construct(Session $sessionHandler, EntityManagerDecorator $entityManager)
 	{
 		parent::__construct($sessionHandler);
 
 		$this->entityManager = $entityManager;
 	}
 
-	/**
-	 * Sets the user identity.
-	 * @return UserStorage Provides a fluent interface
-	 */
-	public function setIdentity(IIdentity $identity = NULL)
+	public function setIdentity(?IIdentity $identity): self
 	{
-		if ($identity !== NULL) {
-			$class = get_class($identity);
+		if ($identity !== null) {
+			$class = DoctrineClassUtils::getClass($identity);
 
 			// we want to convert identity entities into fake identity
 			// so only the identifier fields are stored,
@@ -46,11 +40,7 @@ class UserStorage extends NetteUserStorage
 		return parent::setIdentity($identity);
 	}
 
-	/**
-	 * Returns current user identity, if any.
-	 * @return IIdentity|NULL
-	 */
-	public function getIdentity()
+	public function getIdentity(): ?IIdentity
 	{
 		$identity = parent::getIdentity();
 
@@ -58,9 +48,12 @@ class UserStorage extends NetteUserStorage
 		// convert it back into the real entity
 		// returning reference provides potentially lazy behavior
 		if ($identity instanceof FakeIdentity) {
-			return $this->entityManager->getReference($identity->getClass(), $identity->getId());
+			/** @var \Nette\Security\IIdentity $entity */
+			$entity = $this->entityManager->getReference($identity->getClass(), $identity->getId());
+			return $entity;
 		}
 
 		return $identity;
 	}
+
 }

@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-namespace Majkl578\NetteAddons\Doctrine2Identity\Tests\Entities;
+namespace Darkling\Doctrine2Identity\Tests\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\IIdentity;
@@ -10,51 +10,45 @@ use Nette\Security\IIdentity;
  */
 class User implements IIdentity
 {
+
 	/**
-	 * @ORM\Column(type="integer")
 	 * @ORM\Id
 	 * @ORM\GeneratedValue
+	 * @ORM\Column(type="integer")
 	 * @var int
 	 */
 	private $id;
 
 	/**
-	 * @ORM\Column
+	 * @ORM\Column(type="string")
 	 * @var string
 	 */
 	private $name;
 
-	/**
-	 * @param string $name
-	 */
-	public function __construct($name)
+	public function __construct(string $name)
 	{
 		$this->name = $name;
 	}
 
-	/* implementation of IIdentity */
-
 	/**
-	 * @return int
+	 * @return mixed
 	 */
 	public function getId()
 	{
 		return $this->id;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
 	/**
-	 * @return array
+	 * @return mixed[]
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
-		return array();
+		return [];
 	}
+
 }

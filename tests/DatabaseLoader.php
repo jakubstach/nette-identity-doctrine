@@ -1,20 +1,21 @@
-<?php
+<?php declare(strict_types = 1);
 
-namespace Majkl578\NetteAddons\Doctrine2Identity\Tests;
+namespace Darkling\Doctrine2Identity\Tests;
 
+use Darkling\Doctrine2Identity\Tests\Entities\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Majkl578\NetteAddons\Doctrine2Identity\Tests\Entities\User;
 
 class DatabaseLoader
 {
-	/** @var bool */
-	private $isDbPrepared = FALSE;
 
-	/** @var Connection */
+	/** @var bool */
+	private $isDbPrepared = false;
+
+	/** @var \Doctrine\DBAL\Connection */
 	private $connection;
 
-	/** @var EntityManager */
+	/** @var \Doctrine\ORM\EntityManager */
 	private $entityManager;
 
 	public function __construct(Connection $connection, EntityManager $entityManager)
@@ -23,7 +24,7 @@ class DatabaseLoader
 		$this->entityManager = $entityManager;
 	}
 
-	public function loadUserTableWithOneItem()
+	public function loadUserTableWithOneItem(): void
 	{
 		if ($this->isDbPrepared) {
 			return;
@@ -35,7 +36,7 @@ class DatabaseLoader
 		$this->entityManager->persist($user);
 		$this->entityManager->flush();
 
-		$this->isDbPrepared = TRUE;
+		$this->isDbPrepared = true;
 	}
 
 }

@@ -1,38 +1,69 @@
 {
-	"name": "majkl578/nette-identity-doctrine",
+	"name": "jakubstach/nette-identity-doctrine",
 	"type": "nette-addon",
 	"keywords": ["nette", "doctrine", "orm", "security", "identity", "authentication"],
 	"authors": [
 		{
 			"name": "Michael Moravec"
+		},
+		{
+			"name": "Jan Vaňura"
+		},
+		{
+			"name": "Jakub Stach"
 		}
 	],
-	"description": "Integration of entities implementing IIdentity in Nette 2",
+	"description": "Integration of entities implementing IIdentity in Nette 3",
 	"license": "MIT",
+	"config": {
+		"bin-dir": "bin",
+		"sort-packages": true
+	},
+	"scripts": {
+		"fix": "@fix:cs",
+		"check": [
+			"@check:composer-validate",
+			"@check:phpcs",
+			"@check:phpstan",
+			"@check:tests"
+		],
+		"check:composer-validate": "composer validate",
+		"check:phpcs": "bin/phpcs --standard=build/phpcs.xml --extensions=php --encoding=utf-8 --tab-width=4 src tests",
+		"check:phpstan": "bin/phpstan analyse -l 7 -c build/phpstan.neon src tests",
+		"check:tests": "bin/phpunit -c build/phpunit.xml tests",
+		"fix:cs": "bin/phpcbf --standard=build/phpcs.xml --extensions=php --encoding=utf-8 --tab-width=4 src tests"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"require": {
-		"php": ">=5.3.2",
-		"nette/di": "~2.2",
-		"nette/http": "~2.2",
-		"nette/security": "~2.2",
-		"doctrine/orm": "~2.3"
+		"php": ">=7.4",
+		"doctrine/orm": "^2.6",
+		"nette/di": "^3.0",
+		"nette/http": "^3.0",
+		"nette/security": "^3.0"
 	},
 	"require-dev": {
-		"nette/bootstrap": "~2.2",
-		"kdyby/doctrine": "~2.0",
-		"tracy/tracy": "~2.2",
-		"phpunit/phpunit": "~4.8"
+		"consistence/coding-standard": "^3.10",
+		"nette/bootstrap": "^3.0",
+		"nettrine/orm": "^0.7",
+		"phpstan/phpstan": "^0.12",
+		"phpstan/phpstan-nette": "^0.12",
+		"phpstan/phpstan-strict-rules": "^0.12",
+		"phpunit/phpunit": "^7.5",
+		"slevomat/coding-standard": "6.2 as 6.0.99",
+		"tracy/tracy": "v2.9.4"
 	},
-	"suggests": {
-		"nette/bootstrap": "To use IdentityExtension::register()."
+	"suggest": {
+		"nettrine/orm": "Well-integrated Doctrine2 ORM for Nette Framework"
 	},
 	"autoload": {
 		"psr-4": {
-			"Majkl578\\NetteAddons\\Doctrine2Identity\\": "lib"
+			"Darkling\\Doctrine2Identity\\": "src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Majkl578\\NetteAddons\\Doctrine2Identity\\Tests\\": "tests"
+			"Darkling\\Doctrine2Identity\\Tests\\": "tests"
 		}
 	}
 }
